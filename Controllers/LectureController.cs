@@ -4,6 +4,7 @@ using MeetupAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,13 @@ namespace MeetupAPI.Controllers
     {
         private readonly MeetupContext _meetupContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<LectureController> _logger;
 
-        public LectureController(MeetupContext meetupContext, IMapper mapper)
+        public LectureController(MeetupContext meetupContext, IMapper mapper, ILogger<LectureController> logger)
         {
             _meetupContext = meetupContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -84,6 +87,8 @@ namespace MeetupAPI.Controllers
             {
                 return NotFound();
             }
+
+            _logger.LogWarning($"lectures for meetup {meetupName} were deleted");
             _meetupContext.Lectures.Remove(lecture);
             _meetupContext.SaveChanges();
 
@@ -93,6 +98,7 @@ namespace MeetupAPI.Controllers
         [HttpDelete]
         public ActionResult Delete(string meetupName)
         {
+            throw new Exception("test");
 
             var meetup = _meetupContext.Meetups
                 .Include(m => m.Lectures)
