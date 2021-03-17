@@ -97,8 +97,7 @@ namespace MeetupAPI.Controllers
         }
         [HttpDelete]
         public ActionResult Delete(string meetupName)
-        {
-            throw new Exception("test");
+        {       
 
             var meetup = _meetupContext.Meetups
                 .Include(m => m.Lectures)
