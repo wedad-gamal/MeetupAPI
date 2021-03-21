@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MeetupAPI.Entities;
 using MeetupAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ namespace MeetupAPI.Controllers
 {
     [Route("api/meetup")]
     [ApiController]
+    [Authorize]
     public class MeetupController : ControllerBase
     {
         private readonly MeetupContext _meetupContext;
@@ -24,15 +26,11 @@ namespace MeetupAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet]    
+        [AllowAnonymous]
         public ActionResult<List<MeetupDetailsDto>> GetValues()
         {
-            var meetups = _meetupContext.Meetups.Include(m => m.Location).ToList();
-            //return meetups;
-            //return NotFound(meetups);
-            //HttpContext.Response.StatusCode = 404;
-            //return StatusCode(404, meetups);
-
+            var meetups = _meetupContext.Meetups.Include(m => m.Location).ToList();            
             var meetupDtos = _mapper.Map<List<MeetupDetailsDto>>(meetups);
             return Ok(meetupDtos);
         }
